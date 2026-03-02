@@ -8,79 +8,91 @@
 <style>
   :root {
     --mint: #a8e6cf; --peach: #ffb7b2; --lavender: #c9b8f5; --lemon: #fff1a8;
-    --sky: #b8e0ff; --coral: #ff8b8b; --deep-mint: #3aafa9; --text: #2d3748;
-    --card-bg: rgba(255,255,255,0.85); --shadow: 0 8px 32px rgba(100,100,180,0.13);
+    --sky: #b8e0ff; --coral: #ff8b8b; --text: #2d3748;
+    --card-bg: rgba(255,255,255,0.9); --shadow: 0 8px 32px rgba(100,100,180,0.15);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Nanum Gothic', sans-serif;
     background: linear-gradient(135deg, #e0f4ff 0%, #f3e8ff 40%, #fff3e8 100%);
-    min-height: 100vh; color: var(--text); overflow-x: hidden;
+    min-height: 100vh; color: var(--text); padding-bottom: 50px;
   }
 
-  .bg-shapes { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-  .shape { position: absolute; border-radius: 50%; opacity: 0.18; animation: floatShape 8s ease-in-out infinite; }
-  .shape:nth-child(1) { width:180px;height:180px;background:var(--mint);top:5%;left:8%; }
-  .shape:nth-child(2) { width:120px;height:120px;background:var(--peach);top:15%;right:10%; }
-  @keyframes floatShape { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(10deg); } }
+  .container { max-width: 600px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
 
-  .container { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 24px 16px 60px; }
-
+  /* Header */
   .header {
-    text-align: center; padding: 32px 24px 24px; background: var(--card-bg);
-    border-radius: 28px; box-shadow: var(--shadow); margin-bottom: 20px;
-    backdrop-filter: blur(12px); border: 2px solid rgba(255,255,255,0.7);
+    text-align: center; padding: 25px; background: var(--card-bg);
+    border-radius: 24px; box-shadow: var(--shadow); margin-bottom: 20px;
+    border: 2px solid white;
   }
-  .header h1 { font-family: 'Gaegu', cursive; font-size: 2rem; color: #5c3d99; }
+  .header h1 { font-family: 'Gaegu', cursive; font-size: 2.2rem; color: #5c3d99; margin-bottom: 5px; }
 
-  #welcomeMsg {
-    display: none; background: linear-gradient(135deg, var(--lavender), var(--sky));
-    border-radius: 20px; padding: 18px 24px; margin-bottom: 20px;
-    font-family: 'Gaegu', cursive; font-size: 1.5rem; color: #3d2b80; text-align: center;
+  /* Tabs */
+  .tab-bar { display: flex; gap: 5px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+  .tab-btn {
+    flex: 1; padding: 12px 8px; border-radius: 15px; border: none;
+    background: white; font-weight: 700; font-size: 0.85rem; cursor: pointer;
+    color: #888; transition: 0.2s; white-space: nowrap;
   }
+  .tab-btn.active { background: #a78bfa; color: white; box-shadow: 0 4px 10px rgba(167,139,250,0.4); }
 
-  .name-section, .activity-card {
-    background: var(--card-bg); border-radius: 24px; padding: 24px;
-    margin-bottom: 20px; box-shadow: var(--shadow); backdrop-filter: blur(12px);
-    border: 2px solid rgba(255,255,255,0.7);
+  /* Cards */
+  .card {
+    background: var(--card-bg); border-radius: 24px; padding: 25px;
+    box-shadow: var(--shadow); border: 2px solid white; display: none;
+    animation: fadeIn 0.4s ease;
   }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  .btn { padding: 11px 22px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; transition: 0.15s; }
-  .btn-primary { background: linear-gradient(135deg, #a78bfa, #818cf8); color: white; }
-  .btn-coral { background: linear-gradient(135deg, #fb7185, #f43f5e); color: white; }
-  .btn-mint { background: linear-gradient(135deg, #34d399, #10b981); color: white; }
-  .btn-full { width: 100%; margin-top: 10px; font-size: 1rem; }
-
-  input[type="text"], textarea {
-    width: 100%; padding: 12px 16px; border-radius: 14px; border: 2px solid #e2e8f0;
-    margin-bottom: 10px; outline: none;
+  /* Inputs & Buttons */
+  input[type="text"], input[type="password"] {
+    width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee;
+    margin-bottom: 12px; outline: none; font-size: 1rem;
   }
+  .btn { padding: 12px 20px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; }
+  .btn-main { background: #818cf8; color: white; width: 100%; font-size: 1rem; margin-top: 10px; }
+  .btn-outline { background: white; border: 2px solid #eee; color: #666; }
+  .btn-outline.selected { background: #ffb7b2; border-color: #ff8b8b; color: #d00; }
 
-  .tab-bar { display: flex; gap: 4px; background: rgba(255,255,255,0.6); border-radius: 18px; padding: 4px; margin-bottom: 16px; }
-  .tab-btn { flex: 1; padding: 9px 4px; border-radius: 14px; border: none; background: transparent; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: #9b99bb; }
-  .tab-btn.active { background: white; color: #5c3d99; box-shadow: 0 2px 8px rgba(100,100,180,0.15); }
-
-  /* Board Grid Style */
+  /* Board Grid */
   .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
-  .student-item {
-    background: white; padding: 15px; border-radius: 18px; text-align: center;
-    border: 2px solid #f0f0f0; transition: 0.2s; cursor: pointer;
+  .student-card {
+    background: white; padding: 18px; border-radius: 18px; text-align: center;
+    border: 2px solid #f0f0f0; cursor: pointer; transition: 0.2s;
   }
-  .student-item:hover { transform: translateY(-3px); border-color: var(--lavender); box-shadow: var(--shadow); }
-  .student-name { font-weight: 800; color: #5c3d99; margin-bottom: 5px; }
-  .student-ts { font-size: 0.7rem; color: #aaa; }
+  .student-card:hover { transform: scale(1.03); border-color: var(--lavender); }
+
+  /* Quiz Player (친구 퀴즈 푸는 화면) */
+  #quizPlayer {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255,255,255,0.98); z-index: 1000; display: none;
+    flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+  }
+  .quiz-box {
+    width: 100%; max-width: 450px; background: white; padding: 30px;
+    border-radius: 30px; box-shadow: var(--shadow); text-align: center;
+    border: 3px solid var(--lavender);
+  }
+  .quiz-option {
+    width: 100%; padding: 15px; margin: 8px 0; border-radius: 15px;
+    border: 2px solid #eee; background: #f9f9f9; cursor: pointer; font-size: 1rem; font-weight: 700;
+  }
+  .quiz-option:hover { background: #f0edff; border-color: var(--lavender); }
+
+  /* Admin List */
+  .admin-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9rem;
+  }
+  .del-btn { color: #ff4d4d; cursor: pointer; font-weight: 800; border: 1px solid #ff4d4d; padding: 2px 8px; border-radius: 5px; }
 
   .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: #2d3748; color: white; padding: 12px 24px; border-radius: 30px;
-    z-index: 100; transition: transform 0.3s;
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: #333; color: white; padding: 10px 20px; border-radius: 20px;
+    display: none; z-index: 2000;
   }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
-  .quiz-result { padding: 12px; border-radius: 14px; font-weight: 700; margin-top: 8px; text-align: center; display: none; }
-  .quiz-correct { background: #d1fae5; color: #065f46; }
-  .quiz-wrong { background: #fee2e2; color: #991b1b; }
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -88,213 +100,241 @@
 </head>
 <body>
 
-<div class="bg-shapes">
-  <div class="shape"></div><div class="shape"></div>
-</div>
-
 <div class="container">
   <div class="header">
-    <div style="font-size: 2rem;">🌸 ✨ 🦋</div>
-    <h1>우리 반 레포 활동지</h1>
-    <p style="font-size: 0.9rem; color: #7a7a9d;">6학년 새 학기 친해지기 특집 💜</p>
+    <h1>우리 반 레포 활동지 ✨</h1>
+    <p style="font-size: 0.9rem; color: #888;">친구들과 즐겁게 소통해요!</p>
   </div>
 
-  <div id="welcomeMsg"></div>
-
-  <div class="name-section" id="nameSection">
-    <div style="font-size: 0.8rem; font-weight: 800; color: #9b59b6; margin-bottom: 8px;">👋 먼저 이름을 알려줘!</div>
-    <div style="display: flex; gap: 10px;">
-      <input type="text" id="nameInput" placeholder="예) 김민지" maxlength="10" style="margin-bottom:0;">
-      <button class="btn btn-primary" onclick="setName()">시작!</button>
+  <div class="card" id="nameSection" style="display: block; margin-bottom: 20px;">
+    <p style="font-weight: 800; margin-bottom: 10px;">👋 안녕! 네 이름을 알려줘</p>
+    <div style="display: flex; gap: 8px;">
+      <input type="text" id="userName" placeholder="예: 홍길동" style="margin-bottom: 0;">
+      <button class="btn btn-main" onclick="saveName()" style="width: 80px; margin-top: 0;">확인</button>
     </div>
   </div>
 
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab(0)">🃏 퀴즈 만들기</button>
-    <button class="tab-btn" onclick="switchTab(1)">☁️ 키워드</button>
-    <button class="tab-btn" onclick="switchTab(2)">🤖 AI 프로필</button>
-    <button class="tab-btn" onclick="switchTab(3)" style="background: #fff0f3; color: #e05c7a;">🔥 우리 반 보드</button>
+    <button class="tab-btn" onclick="switchTab(1)">🔥 우리 반 보드</button>
+    <button class="tab-btn" onclick="switchTab(2)">⚙️ 관리</button>
   </div>
 
-  <div class="activity-card" id="tab0">
-    <h3 style="margin-bottom: 15px;">🃏 나를 맞혀봐!</h3>
-    <input type="text" id="tl1" placeholder="진실 혹은 거짓 문장 1">
-    <input type="text" id="tl2" placeholder="진실 혹은 거짓 문장 2">
-    <input type="text" id="tl3" placeholder="진실 혹은 거짓 문장 3">
+  <div class="card" id="tab0" style="display: block;">
+    <h3 style="margin-bottom: 15px; color: #5c3d99;">🃏 나만의 퀴즈 출제하기</h3>
+    <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">진실 2개와 거짓 1개를 적어주세요!</p>
     
-    <p style="font-size: 0.8rem; font-weight: 700; color: #e05c7a;">❓ 어느 것이 거짓말이야?</p>
-    <div style="display: flex; gap: 8px; margin: 10px 0;" id="liePicker">
-      <button class="btn btn-outline" onclick="selectLie(1)">1번</button>
-      <button class="btn btn-outline" onclick="selectLie(2)">2번</button>
-      <button class="btn btn-outline" onclick="selectLie(3)">3번</button>
+    <input type="text" id="q1" placeholder="첫 번째 문장">
+    <input type="text" id="q2" placeholder="두 번째 문장">
+    <input type="text" id="q3" placeholder="세 번째 문장">
+    
+    <p style="font-weight: 700; font-size: 0.85rem; color: #e05c7a; margin: 10px 0;">거짓말은 몇 번인가요?</p>
+    <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+      <button class="btn btn-outline lie-sel" onclick="setLie(1)">1번</button>
+      <button class="btn btn-outline lie-sel" onclick="setLie(2)">2번</button>
+      <button class="btn btn-outline lie-sel" onclick="setLie(3)">3번</button>
     </div>
     
-    <button class="btn btn-coral btn-full" onclick="saveTruthLie()">💾 내 퀴즈 저장하기</button>
-
-    <div id="quizPreview" style="margin-top:20px; display:none; background: #f8f9ff; padding: 15px; border-radius: 15px;">
-      <div id="quizQ" style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 10px;"></div>
-      <div id="quizBtns" style="display: flex; gap: 5px;"></div>
-      <div class="quiz-result" id="quizResult"></div>
-    </div>
+    <button class="btn btn-main" onclick="uploadQuiz()" style="background: var(--coral);">🚀 보드에 내 퀴즈 올리기</button>
   </div>
 
-  <div class="activity-card" id="tab1" style="display:none;">☁️ 키워드 클라우드 기능 (기존과 동일)</div>
-  <div class="activity-card" id="tab2" style="display:none;">🤖 AI 프로필 생성 기능 (기존과 동일)</div>
-
-  <div class="activity-card" id="tab3" style="display:none;">
-    <h3 style="margin-bottom: 5px;">🔥 우리 반 퀴즈 보드</h3>
-    <p style="font-size: 0.8rem; color: #7a7a9d; margin-bottom: 15px;">친구 이름을 눌러서 퀴즈를 맞춰보세요!</p>
-    <div class="board-grid" id="classBoard">
+  <div class="card" id="tab1">
+    <h3 style="margin-bottom: 5px;">🔥 우리 반 게시판</h3>
+    <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">친구 이름을 눌러서 퀴즈를 맞춰보세요!</p>
+    <div class="board-grid" id="boardList">
       </div>
   </div>
 
-  <button class="btn btn-full" style="background:linear-gradient(135deg,#f97316,#ef4444);color:white; margin-top: 10px;" onclick="shareToBoard()">📢 우리 반 보드에 올리기!</button>
-
+  <div class="card" id="tab2">
+    <h3>⚙️ 데이터 관리 (교사용)</h3>
+    <div id="adminAuth">
+      <p style="margin: 15px 0 10px; font-size: 0.9rem;">비밀번호를 입력하세요.</p>
+      <input type="password" id="adminPw" placeholder="비밀번호 4자리">
+      <button class="btn btn-main" onclick="checkAdmin()">로그인</button>
+    </div>
+    <div id="adminPanel" style="display: none;">
+      <button class="btn btn-main" onclick="resetAllData()" style="background: #ff4d4d; margin-bottom: 20px;">💣 전체 데이터 초기화</button>
+      <p style="font-weight: 800; font-size: 0.9rem; margin-bottom: 10px;">학생 개별 관리</p>
+      <div id="adminList"></div>
+    </div>
+  </div>
 </div>
 
-<div class="toast" id="toast">저장됐어! 🎉</div>
+<div id="quizPlayer">
+  <div class="quiz-box">
+    <h2 id="targetName" style="color: #5c3d99; margin-bottom: 20px;">ㅇㅇㅇ의 퀴즈</h2>
+    <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">이 중 <b>거짓말</b>은 무엇일까요?</p>
+    
+    <button class="quiz-option" id="opt1" onclick="submitAnswer(1)"></button>
+    <button class="quiz-option" id="opt2" onclick="submitAnswer(2)"></button>
+    <button class="quiz-option" id="opt3" onclick="submitAnswer(3)"></button>
+    
+    <div id="solveResult" style="margin-top: 20px; font-weight: 800; font-size: 1.2rem; display: none;"></div>
+    <button class="btn btn-outline" onclick="closeQuiz()" style="margin-top: 25px; width: 100%;">닫기</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-// Firebase 설정 (사용자 키 유지)
+// Firebase 초기화 (제공해주신 키 사용)
 firebase.initializeApp({
   apiKey: 'AIzaSyDhZbmZ64vroTb7dTWBHNmAgvADUT8ZHtQ',
   projectId: 'whoami-fd9d4',
   databaseURL: 'https://whoami-fd9d4-default-rtdb.asia-southeast1.firebasedatabase.app'
 });
 const db = firebase.database();
-const CLASS_CODE = '6학년1반';
+const CLASS_REF = db.ref('classes/6학년1반/students');
 
-let currentName = '';
-let lieIndex = 0;
-let studentsData = {}; // 전체 학생 데이터를 담을 객체
+let myName = '';
+let selectedLie = 0;
+let students = {};
+let currentQuizAns = 0;
 
-// 초기화
-window.onload = function() {
-  loadFromStorage();
-  listenToBoard(); // 보드 실시간 감시 시작
+// 초기 로드
+window.onload = () => {
+  const saved = localStorage.getItem('school_name');
+  if(saved) {
+    myName = saved;
+    document.getElementById('userName').value = saved;
+    document.getElementById('nameSection').style.border = '2px solid #818cf8';
+  }
+  listenData();
 };
 
-function setName() {
-  const name = document.getElementById('nameInput').value.trim();
-  if (!name) { showToast('이름을 입력해줘! 😊'); return; }
-  currentName = name;
-  document.getElementById('welcomeMsg').textContent = `반가워, ${name}아! 🌟`;
-  document.getElementById('welcomeMsg').style.display = 'block';
-  saveToStorage();
+function saveName() {
+  const val = document.getElementById('userName').value.trim();
+  if(!val) return alert('이름을 입력해줘!');
+  myName = val;
+  localStorage.setItem('school_name', val);
+  showToast('이름이 저장되었습니다! 😊');
 }
 
-function selectLie(n) {
-  lieIndex = n;
-  const btns = document.querySelectorAll('#liePicker .btn');
-  btns.forEach((b, i) => b.style.background = (i+1 === n) ? '#ffb7b2' : 'white');
-}
-
-// 데이터 저장 (내 기기)
-function saveToStorage() {
-  const data = { name: currentName, tl1: document.getElementById('tl1').value, tl2: document.getElementById('tl2').value, tl3: document.getElementById('tl3').value, lie: lieIndex };
-  localStorage.setItem('rapportData', JSON.stringify(data));
-}
-
-function loadFromStorage() {
-  const saved = JSON.parse(localStorage.getItem('rapportData') || '{}');
-  if (saved.name) { currentName = saved.name; document.getElementById('nameInput').value = saved.name; }
-}
-
-// 보드에 데이터 올리기
-async function shareToBoard() {
-  if (!currentName) { showToast('먼저 이름을 입력해줘!'); return; }
-  const payload = {
-    name: currentName,
-    tl1: document.getElementById('tl1').value,
-    tl2: document.getElementById('tl2').value,
-    tl3: document.getElementById('tl3').value,
-    lie: lieIndex,
-    ts: Date.now()
-  };
-  if(!payload.tl1 || !payload.lie) { showToast('퀴즈 내용을 완성해줘!'); return; }
-
-  try {
-    await db.ref(`classes/${CLASS_CODE}/students/${currentName}`).set(payload);
-    showToast('🔥 보드에 성공적으로 올렸어!');
-    switchTab(3); // 보드 탭으로 이동
-  } catch(e) { showToast('오류 발생!'); }
-}
-
-// 실시간 보드 리스너
-function listenToBoard() {
-  db.ref(`classes/${CLASS_CODE}/students`).on('value', (snapshot) => {
-    studentsData = snapshot.val() || {};
-    renderBoard();
+function setLie(n) {
+  selectedLie = n;
+  document.querySelectorAll('.lie-sel').forEach((b, i) => {
+    b.classList.toggle('selected', i + 1 === n);
   });
 }
 
-// 보드 화면 그리기
-function renderBoard() {
-  const container = document.getElementById('classBoard');
-  container.innerHTML = '';
+// 퀴즈 업로드
+function uploadQuiz() {
+  if(!myName) return alert('먼저 이름을 입력하고 확인을 눌러줘!');
+  const q1 = document.getElementById('q1').value.trim();
+  const q2 = document.getElementById('q2').value.trim();
+  const q3 = document.getElementById('q3').value.trim();
   
-  Object.keys(studentsData).forEach(name => {
-    const student = studentsData[name];
-    const item = document.createElement('div');
-    item.className = 'student-item';
-    item.innerHTML = `
-      <div class="student-name">🙋‍♂️ ${name}</div>
-      <div class="student-ts">퀴즈 준비 완료!</div>
-    `;
-    item.onclick = () => startFriendQuiz(name);
-    container.appendChild(item);
+  if(!q1 || !q2 || !q3 || selectedLie === 0) return alert('모든 문장을 적고 정답을 골라줘!');
+
+  CLASS_REF.child(myName).set({
+    name: myName,
+    q1, q2, q3,
+    ans: selectedLie,
+    ts: Date.now()
+  }).then(() => {
+    showToast('보드에 퀴즈를 올렸어! 🔥');
+    switchTab(1);
   });
 }
 
-// 친구 퀴즈 풀기 시작
-function startFriendQuiz(name) {
-  const data = studentsData[name];
-  switchTab(0); // 퀴즈 탭으로 이동
-  renderQuizPreview(data.tl1, data.tl2, data.tl3, data.lie, name);
-  showToast(`${name}의 퀴즈를 풀어보자!`);
-}
-
-function renderQuizPreview(t1, t2, t3, lie, targetName) {
-  const preview = document.getElementById('quizPreview');
-  document.getElementById('quizQ').innerHTML = 
-    `<b>${targetName}</b>의 문장 중 거짓말을 찾아봐! 👀<br><br>① ${t1}<br>② ${t2}<br>③ ${t3}`;
-
-  const btns = document.getElementById('quizBtns');
-  btns.innerHTML = '';
-  [1,2,3].forEach(n => {
-    const b = document.createElement('button');
-    b.className = 'btn';
-    b.style.border = '1px solid #ddd';
-    b.textContent = `${n}번!`;
-    b.onclick = () => checkAnswer(n, lie);
-    btns.appendChild(b);
+// 데이터 감시 및 보드 업데이트
+function listenData() {
+  CLASS_REF.on('value', (snapshot) => {
+    students = snapshot.val() || {};
+    updateBoard();
+    updateAdminList();
   });
-  document.getElementById('quizResult').style.display = 'none';
-  preview.style.display = 'block';
 }
 
-function checkAnswer(pick, correct) {
-  const result = document.getElementById('quizResult');
-  result.style.display = 'block';
-  if (pick === correct) {
-    result.className = 'quiz-result quiz-correct';
-    result.textContent = '🎉 정답! 정말 잘 아는구나?';
+function updateBoard() {
+  const list = document.getElementById('boardList');
+  list.innerHTML = '';
+  Object.keys(students).forEach(name => {
+    const div = document.createElement('div');
+    div.className = 'student-card';
+    div.innerHTML = `<div style="font-size:1.2rem; margin-bottom:5px;">🙋‍♂️</div><div style="font-weight:800;">${name}</div>`;
+    div.onclick = () => openQuiz(name);
+    list.appendChild(div);
+  });
+}
+
+// 퀴즈 풀기 시작
+function openQuiz(name) {
+  const data = students[name];
+  currentQuizAns = data.ans;
+  
+  document.getElementById('targetName').textContent = `${name}의 퀴즈`;
+  document.getElementById('opt1').textContent = `1. ${data.q1}`;
+  document.getElementById('opt2').textContent = `2. ${data.q2}`;
+  document.getElementById('opt3').textContent = `3. ${data.q3}`;
+  
+  document.getElementById('solveResult').style.display = 'none';
+  document.getElementById('quizPlayer').style.display = 'flex';
+}
+
+function submitAnswer(n) {
+  const res = document.getElementById('solveResult');
+  res.style.display = 'block';
+  if(n === currentQuizAns) {
+    res.innerHTML = "🎉 정답! 진짜를 찾아냈어!";
+    res.style.color = "#059669";
   } else {
-    result.className = 'quiz-result quiz-wrong';
-    result.textContent = `❌ 아쉽다! 정답은 ${correct}번이야.`;
+    res.innerHTML = `❌ 틀렸어! 정답은 ${currentQuizAns}번이야.`;
+    res.style.color = "#dc2626";
   }
 }
 
+function closeQuiz() {
+  document.getElementById('quizPlayer').style.display = 'none';
+}
+
+// 교사 관리 기능
+function checkAdmin() {
+  const pw = document.getElementById('adminPw').value;
+  if(pw === '6956') {
+    document.getElementById('adminAuth').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+  } else {
+    alert('비밀번호가 틀렸습니다.');
+  }
+}
+
+function updateAdminList() {
+  const list = document.getElementById('adminList');
+  list.innerHTML = '';
+  Object.keys(students).forEach(name => {
+    const row = document.createElement('div');
+    row.className = 'admin-item';
+    row.innerHTML = `<span>${name} 학생</span> <span class="del-btn" onclick="deleteStudent('${name}')">삭제</span>`;
+    list.appendChild(row);
+  });
+}
+
+function deleteStudent(name) {
+  if(confirm(`${name} 학생의 데이터를 삭제할까요?`)) {
+    CLASS_REF.child(name).remove();
+  }
+}
+
+function resetAllData() {
+  if(confirm('정말 우리 반 모든 데이터를 초기화할까요? 되돌릴 수 없습니다.')) {
+    CLASS_REF.remove().then(() => alert('초기화 완료!'));
+  }
+}
+
+// 기타 유틸
 function switchTab(n) {
-  document.querySelectorAll('[id^="tab"]').forEach((el, i) => el.style.display = i === n ? 'block' : 'none');
   document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+  document.querySelectorAll('.card').forEach((c, i) => {
+    if(i > 0) c.style.display = (i-1 === n) ? 'block' : 'none';
+  });
 }
 
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2000);
 }
 </script>
 </body>
