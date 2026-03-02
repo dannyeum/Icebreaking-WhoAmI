@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리 반 레포 활동지 🌟</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --mint: #a8e6cf;
+    --peach: #ffb7b2;
+    --lavender: #c9b8f5;
+    --lemon: #fff1a8;
+    --sky: #b8e0ff;
+    --coral: #ff8b8b;
+    --deep-mint: #3aafa9;
+    --text: #2d3748;
+    --card-bg: rgba(255,255,255,0.85);
+    --shadow: 0 8px 32px rgba(100,100,180,0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nanum Gothic', sans-serif;
+    background: linear-gradient(135deg, #e0f4ff 0%, #f3e8ff 40%, #fff3e8 100%);
+    min-height: 100vh;
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* Floating shapes background */
+  .bg-shapes {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    overflow: hidden;
+  }
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.18;
+    animation: floatShape 8s ease-in-out infinite;
+  }
+  .shape:nth-child(1) { width:180px;height:180px;background:var(--mint);top:5%;left:8%;animation-delay:0s; }
+  .shape:nth-child(2) { width:120px;height:120px;background:var(--peach);top:15%;right:10%;animation-delay:1.5s; }
+  .shape:nth-child(3) { width:100px;height:100px;background:var(--lavender);bottom:20%;left:5%;animation-delay:3s; }
+  .shape:nth-child(4) { width:150px;height:150px;background:var(--lemon);bottom:10%;right:8%;animation-delay:2s; }
+  .shape:nth-child(5) { width:80px;height:80px;background:var(--sky);top:50%;left:50%;animation-delay:4s; }
+
+  @keyframes floatShape {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+  }
+
+  /* Main container */
+  .container {
+    position: relative; z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 32px 24px 24px;
+    background: var(--card-bg);
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(255,255,255,0.7);
+  }
+  .header .emoji-row { font-size: 2.4rem; margin-bottom: 8px; letter-spacing: 4px; }
+  .header h1 {
+    font-family: 'Gaegu', cursive;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #5c3d99;
+    margin-bottom: 6px;
+  }
+  .header .sub { font-size: 0.9rem; color: #7a7a9d; }
+
+  /* Welcome message */
+  #welcomeMsg {
+    display: none;
+    background: linear-gradient(135deg, var(--lavender), var(--sky));
+    border-radius: 20px;
+    padding: 18px 24px;
+    margin-bottom: 20px;
+    font-family: 'Gaegu', cursive;
+    font-size: 1.5rem;
+    color: #3d2b80;
+    text-align: center;
+    animation: bounceIn 0.5s ease;
+    box-shadow: var(--shadow);
+  }
+  @keyframes bounceIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    70% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Name input section */
+  .name-section {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(255,255,255,0.7);
+  }
+  .section-label {
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #9b59b6;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .name-row { display: flex; gap: 10px; align-items: center; }
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: 2px solid #e2e8f0;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.8);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    color: var(--text);
+  }
+  input[type="text"]:focus, textarea:focus {
+    border-color: #c9b8f5;
+    box-shadow: 0 0 0 3px rgba(201,184,245,0.3);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* Buttons */
+  .btn {
+    padding: 11px 22px;
+    border-radius: 14px;
+    border: none;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+  }
+  .btn:active { transform: scale(0.96); }
+  .btn-primary {
+    background: linear-gradient(135deg, #a78bfa, #818cf8);
+    color: white;
+    box-shadow: 0 4px 14px rgba(139,92,246,0.35);
+  }
+  .btn-primary:hover { box-shadow: 0 6px 20px rgba(139,92,246,0.5); transform: translateY(-1px); }
+  .btn-mint {
+    background: linear-gradient(135deg, #34d399, #10b981);
+    color: white;
+    box-shadow: 0 4px 14px rgba(52,211,153,0.35);
+  }
+  .btn-coral {
+    background: linear-gradient(135deg, #fb7185, #f43f5e);
+    color: white;
+    box-shadow: 0 4px 14px rgba(251,113,133,0.35);
+  }
+  .btn-sky {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: white;
+    box-shadow: 0 4px 14px rgba(56,189,248,0.35);
+  }
+  .btn-lemon {
+    background: linear-gradient(135deg, #facc15, #eab308);
+    color: #5a3e00;
+    box-shadow: 0 4px 14px rgba(250,204,21,0.4);
+  }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid #c9b8f5;
+    color: #7c3aed;
+  }
+  .btn-full { width: 100%; margin-top: 10px; padding: 14px; font-size: 1rem; }
+
+  /* Activity cards */
+  .activity-card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(255,255,255,0.7);
+    animation: slideUp 0.4s ease both;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .activity-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .activity-badge {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .badge-1 { background: linear-gradient(135deg, var(--peach), #ffcdd2); }
+  .badge-2 { background: linear-gradient(135deg, var(--mint), #b2dfdb); }
+  .badge-3 { background: linear-gradient(135deg, var(--lavender), #d1c4e9); }
+
+  .activity-title { font-size: 1.05rem; font-weight: 800; color: #3d2b80; }
+  .activity-desc { font-size: 0.8rem; color: #9b99bb; margin-top: 2px; }
+
+  /* Activity 1 - 2 Truths & 1 Lie */
+  .truth-lie-inputs { display: flex; flex-direction: column; gap: 8px; }
+  .truth-lie-item { position: relative; }
+  .truth-lie-item label {
+    display: block; font-size: 0.78rem; font-weight: 700;
+    margin-bottom: 4px; color: #6d5fa0;
+  }
+  .lie-label { color: #e05c7a !important; }
+
+  .lie-picker {
+    display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0;
+  }
+  .lie-picker-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 2px solid #e2e8f0;
+    background: white;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+  .lie-picker-btn.selected {
+    border-color: #fb7185;
+    background: #fff0f3;
+    color: #e05c7a;
+    font-weight: 700;
+  }
+
+  /* Activity 2 - Word Cloud */
+  .keyword-area {
+    display: flex; gap: 8px; margin-bottom: 12px;
+  }
+  .keyword-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    min-height: 50px;
+    padding: 10px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 14px;
+    border: 2px dashed #c9b8f5;
+    margin-bottom: 12px;
+  }
+  .tag {
+    padding: 5px 13px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    animation: popIn 0.2s ease;
+    display: flex; align-items: center; gap: 4px;
+  }
+  @keyframes popIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+  .tag-colors { background: #fde8f3; color: #c2185b; }
+  .tag-colors:nth-child(3n+1) { background: #e8f5e9; color: #1b5e20; }
+  .tag-colors:nth-child(3n+2) { background: #e3f2fd; color: #0d47a1; }
+  .tag-colors:nth-child(3n) { background: #f3e5f5; color: #4a148c; }
+  .tag .del { opacity: 0.5; font-size: 0.75rem; }
+
+  .cloud-canvas {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #f0f4ff, #fef0ff);
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+    border: 2px solid rgba(201,184,245,0.3);
+  }
+  .cloud-word {
+    position: absolute;
+    font-family: 'Gaegu', cursive;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 2px 6px;
+    animation: floatWord 4s ease-in-out infinite;
+    user-select: none;
+  }
+  @keyframes floatWord {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* Activity 3 - AI Profile */
+  .keyword-picker {
+    display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0;
+  }
+  .kw-chip {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 2px solid #e2e8f0;
+    background: white;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Nanum Gothic', sans-serif;
+    color: var(--text);
+  }
+  .kw-chip.selected {
+    border-color: #a78bfa;
+    background: linear-gradient(135deg, #f5f0ff, #ede9fe);
+    color: #6d28d9;
+    font-weight: 700;
+    transform: scale(1.05);
+  }
+
+  .ai-result {
+    background: linear-gradient(135deg, #f5f0ff, #fce4ec);
+    border-radius: 18px;
+    padding: 18px;
+    margin-top: 14px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #3d2b80;
+    display: none;
+    animation: bounceIn 0.4s ease;
+    border: 2px solid rgba(167,139,250,0.3);
+    white-space: pre-wrap;
+  }
+  .ai-loading {
+    text-align: center;
+    padding: 20px;
+    display: none;
+    color: #9b59b6;
+    font-size: 0.9rem;
+  }
+  .loading-dots span {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: #a78bfa;
+    border-radius: 50%;
+    margin: 0 3px;
+    animation: bounce 1.4s ease-in-out infinite;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-10px)} }
+
+  /* Card view mode */
+  #cardView {
+    display: none;
+    background: var(--card-bg);
+    border-radius: 28px;
+    padding: 30px 24px;
+    box-shadow: 0 12px 48px rgba(100,100,180,0.2);
+    backdrop-filter: blur(12px);
+    margin-bottom: 20px;
+    border: 2px solid rgba(255,255,255,0.8);
+    animation: bounceIn 0.5s ease;
+  }
+  #cardView .card-name {
+    font-family: 'Gaegu', cursive;
+    font-size: 2rem;
+    color: #5c3d99;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .card-item {
+    background: rgba(255,255,255,0.7);
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    border-left: 4px solid #a78bfa;
+  }
+  .card-item .card-q { font-size: 0.75rem; font-weight: 800; color: #9b59b6; margin-bottom: 4px; }
+  .card-item .card-a { font-size: 1rem; color: #2d3748; line-height: 1.5; }
+
+  /* Save toast */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: #2d3748; color: white;
+    padding: 12px 24px; border-radius: 30px;
+    font-size: 0.85rem; font-weight: 700;
+    z-index: 100; transition: transform 0.3s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Progress dots */
+  .progress-bar {
+    display: flex; justify-content: center; gap: 8px; margin-bottom: 20px;
+  }
+  .prog-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(201,184,245,0.4);
+    transition: all 0.3s;
+  }
+  .prog-dot.active { background: #a78bfa; transform: scale(1.3); }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex; gap: 4px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 18px;
+    padding: 4px;
+    margin-bottom: 16px;
+  }
+  .tab-btn {
+    flex: 1; padding: 9px 4px;
+    border-radius: 14px; border: none;
+    background: transparent;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 0.78rem; font-weight: 700;
+    cursor: pointer; color: #9b99bb;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: white;
+    color: #5c3d99;
+    box-shadow: 0 2px 8px rgba(100,100,180,0.15);
+  }
+
+  /* Lie quiz result */
+  .quiz-result {
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-weight: 700;
+    margin-top: 8px;
+    text-align: center;
+    display: none;
+    animation: bounceIn 0.3s ease;
+  }
+  .quiz-correct { background: #d1fae5; color: #065f46; }
+  .quiz-wrong { background: #fee2e2; color: #991b1b; }
+
+  /* Mobile adjustments */
+  @media(max-width:480px) {
+    .header h1 { font-size: 1.6rem; }
+    .activity-title { font-size: 0.95rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-shapes">
+  <div class="shape"></div><div class="shape"></div>
+  <div class="shape"></div><div class="shape"></div><div class="shape"></div>
+</div>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="emoji-row">🌸 ✨ 🦋</div>
+    <h1>우리 반 레포 활동지</h1>
+    <p class="sub">6학년 새 학기 친해지기 특집 💜</p>
+  </div>
+
+  <!-- Welcome message -->
+  <div id="welcomeMsg"></div>
+
+  <!-- Name input -->
+  <div class="name-section" id="nameSection">
+    <div class="section-label">👋 먼저 이름을 알려줘!</div>
+    <div class="name-row">
+      <input type="text" id="nameInput" placeholder="예) 김민지" maxlength="10">
+      <button class="btn btn-primary" onclick="setName()">시작!</button>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar">
+    <div class="prog-dot active" id="dot1"></div>
+    <div class="prog-dot" id="dot2"></div>
+    <div class="prog-dot" id="dot3"></div>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(0)">🃏 나를 맞혀봐</button>
+    <button class="tab-btn" onclick="switchTab(1)">☁️ 키워드 클라우드</button>
+    <button class="tab-btn" onclick="switchTab(2)">🤖 AI 프로필</button>
+  </div>
+
+  <!-- ===== ACTIVITY 1: 2 Truths & 1 Lie ===== -->
+  <div class="activity-card" id="tab0">
+    <div class="activity-header">
+      <div class="activity-badge badge-1">🃏</div>
+      <div>
+        <div class="activity-title">활동 1 · 나를 맞혀봐!</div>
+        <div class="activity-desc">진실 2개 + 거짓 1개 — 친구들이 맞혀볼 거야!</div>
+      </div>
+    </div>
+
+    <div class="truth-lie-inputs">
+      <div class="truth-lie-item">
+        <label>📌 첫 번째 문장</label>
+        <input type="text" id="tl1" placeholder="나에 대한 사실이나 거짓을 자유롭게 써봐">
+      </div>
+      <div class="truth-lie-item">
+        <label>📌 두 번째 문장</label>
+        <input type="text" id="tl2" placeholder="예: 나는 형제자매가 없다">
+      </div>
+      <div class="truth-lie-item">
+        <label class="lie-label">📌 세 번째 문장</label>
+        <input type="text" id="tl3" placeholder="예: 나는 해외에 살았던 적이 있다">
+      </div>
+    </div>
+
+    <p style="margin-top:14px;font-size:0.82rem;color:#9b59b6;font-weight:700;">❓ 어느 것이 거짓말이야?</p>
+    <div class="lie-picker">
+      <button class="lie-picker-btn" onclick="selectLie(1)">① 번</button>
+      <button class="lie-picker-btn" onclick="selectLie(2)">② 번</button>
+      <button class="lie-picker-btn" onclick="selectLie(3)">③ 번</button>
+    </div>
+
+    <button class="btn btn-coral btn-full" onclick="saveTruthLie()">💾 저장하고 친구 퀴즈 만들기</button>
+
+    <!-- Quiz Preview Mode -->
+    <div id="quizPreview" style="margin-top:16px;display:none;">
+      <div style="font-size:0.82rem;font-weight:800;color:#e05c7a;margin-bottom:8px;">🎮 친구 퀴즈 미리보기</div>
+      <div id="quizCard" style="background:linear-gradient(135deg,#fff0f3,#fce4ec);border-radius:16px;padding:16px;">
+        <div id="quizQ" style="font-size:0.9rem;line-height:1.8;color:#3d2b80;margin-bottom:12px;"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="quizBtns"></div>
+        <div class="quiz-result" id="quizResult"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ACTIVITY 2: Word Cloud ===== -->
+  <div class="activity-card" id="tab1" style="display:none;">
+    <div class="activity-header">
+      <div class="activity-badge badge-2">☁️</div>
+      <div>
+        <div class="activity-title">활동 2 · 우리 반 키워드 클라우드</div>
+        <div class="activity-desc">우리 반에 바라는 것, 내가 좋아하는 것을 입력해봐!</div>
+      </div>
+    </div>
+
+    <div style="font-size:0.82rem;font-weight:700;color:#6d5fa0;margin-bottom:8px;">✨ 주제를 선택해봐</div>
+    <div class="tab-bar" style="margin-bottom:12px;">
+      <button class="tab-btn active" id="topic1" onclick="setTopic('wish')">🌈 우리 반 바람</button>
+      <button class="tab-btn" id="topic2" onclick="setTopic('like')">💖 내가 좋아하는 것</button>
+    </div>
+
+    <div class="keyword-area">
+      <input type="text" id="kwInput" placeholder="키워드 하나씩 입력해봐!" maxlength="12" onkeydown="if(event.key==='Enter')addKeyword()">
+      <button class="btn btn-mint" onclick="addKeyword()">추가</button>
+    </div>
+
+    <div style="font-size:0.78rem;color:#9b99bb;margin-bottom:6px;">내가 추가한 키워드</div>
+    <div class="keyword-tags" id="myTags"></div>
+
+    <div style="font-size:0.82rem;font-weight:700;color:#6d5fa0;margin-bottom:8px;">☁️ 실시간 클라우드</div>
+    <div class="cloud-canvas" id="cloudCanvas"></div>
+  </div>
+
+  <!-- ===== ACTIVITY 3: AI Profile ===== -->
+  <div class="activity-card" id="tab2" style="display:none;">
+    <div class="activity-header">
+      <div class="activity-badge badge-3">🤖</div>
+      <div>
+        <div class="activity-title">활동 3 · AI 프로필 생성</div>
+        <div class="activity-desc">내 성격 키워드 선택 → AI가 멋진 소개문을 만들어줄게!</div>
+      </div>
+    </div>
+
+    <div style="font-size:0.82rem;font-weight:700;color:#6d5fa0;margin-bottom:8px;">💜 나를 표현하는 키워드를 골라봐 (여러 개 OK!)</div>
+
+    <div class="keyword-picker" id="kwPicker">
+      <!-- filled by JS -->
+    </div>
+
+    <div style="margin:12px 0;">
+      <label style="font-size:0.82rem;font-weight:700;color:#6d5fa0;display:block;margin-bottom:6px;">✏️ 추가로 하고 싶은 말</div>
+      <textarea id="extraInfo" placeholder="예: 나는 수학을 좋아하고 농구도 잘해. 반 친구들이랑 빨리 친해지고 싶어!" rows="3"></textarea>
+    </div>
+
+    <div style="font-size:0.82rem;font-weight:700;color:#6d5fa0;margin-bottom:8px;">🎨 어떤 스타일로 만들까?</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;" id="styleSelector">
+      <button class="lie-picker-btn" onclick="selectStyle('character')" id="st1">🦸 캐릭터 설명문</button>
+      <button class="lie-picker-btn" onclick="selectStyle('cheer')" id="st2">📣 응원 문구</button>
+      <button class="lie-picker-btn" onclick="selectStyle('poem')" id="st3">🌸 짧은 소시</button>
+    </div>
+
+    <button class="btn btn-primary btn-full" onclick="generateAI()">✨ AI야, 만들어줘!</button>
+
+    <div class="ai-loading" id="aiLoading">
+      <div style="font-size:1.5rem;margin-bottom:8px;">🤖</div>
+      <div>AI가 열심히 생각하는 중...</div>
+      <div class="loading-dots" style="margin-top:8px;">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="ai-result" id="aiResult"></div>
+
+    <button class="btn btn-lemon btn-full" id="regen" style="display:none;margin-top:8px;" onclick="generateAI()">🔄 다시 만들어줘!</button>
+  </div>
+
+  <!-- Card View Button -->
+  <button class="btn btn-sky btn-full" onclick="toggleCardView()">👀 친구에게 보여주기 모드</button>
+
+  <!-- Card View -->
+  <div id="cardView">
+    <div class="card-name" id="cardName">🌟 이름</div>
+    <div id="cardItems"></div>
+    <button class="btn btn-outline btn-full" style="margin-top:12px;" onclick="toggleCardView()">✏️ 수정하기</button>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">저장됐어! 🎉</div>
+
+<script>
+// ========================
+// STATE
+// ========================
+let currentName = '';
+let currentTab = 0;
+let lieIndex = 0;
+let selectedStyle = 'character';
+let myKeywords = [];
+let currentTopic = 'wish';
+let selectedKws = new Set();
+
+const PERSONALITY_KWS = [
+  '웃음 부자 😄','조용한 편 🌙','말 많음 📢','리더십 강함 👑',
+  '예술적 감각 🎨','운동 신경 좋음 ⚽','친절함 🤝','호기심 많음 🔍',
+  '게임 고수 🎮','먹는 거 좋아함 🍕','음악 덕후 🎵','독서 좋아함 📚',
+  '영화/드라마 덕후 🎬','동물 사랑 🐾','새로운 도전 좋아함 🚀','수학 잘함 🧮'
+];
+
+const SAMPLE_CLOUD_WORDS = {
+  wish: ['서로 존중','웃음 가득','배려','행복','함께 성장','믿음','즐거운 반','솔직하게','힘이 되는','파이팅'],
+  like: ['아이돌','야구','치킨','게임','수영','웹툰','라면','유튜브','강아지','잠자기']
+};
+
+// ========================
+// INIT
+// ========================
+window.onload = function() {
+  loadFromStorage();
+  renderKwPicker();
+  renderCloud();
+};
+
+function loadFromStorage() {
+  const saved = JSON.parse(localStorage.getItem('rapportData') || '{}');
+  if (saved.name) {
+    currentName = saved.name;
+    document.getElementById('nameInput').value = saved.name;
+    showWelcome(saved.name);
+  }
+  if (saved.tl1) { document.getElementById('tl1').value = saved.tl1; }
+  if (saved.tl2) { document.getElementById('tl2').value = saved.tl2; }
+  if (saved.tl3) { document.getElementById('tl3').value = saved.tl3; }
+  if (saved.lie) { lieIndex = saved.lie; document.querySelectorAll('.lie-picker-btn').forEach((b,i)=>{ if(i+1===lieIndex) b.classList.add('selected'); }); }
+  if (saved.keywords) { myKeywords = saved.keywords; renderTags(); renderCloud(); }
+  if (saved.aiResult) {
+    document.getElementById('aiResult').textContent = saved.aiResult;
+    document.getElementById('aiResult').style.display = 'block';
+    document.getElementById('regen').style.display = 'block';
+  }
+}
+
+function saveToStorage() {
+  const data = {
+    name: currentName,
+    tl1: document.getElementById('tl1').value,
+    tl2: document.getElementById('tl2').value,
+    tl3: document.getElementById('tl3').value,
+    lie: lieIndex,
+    keywords: myKeywords,
+    aiResult: document.getElementById('aiResult').textContent
+  };
+  localStorage.setItem('rapportData', JSON.stringify(data));
+}
+
+// ========================
+// NAME
+// ========================
+function setName() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) { showToast('이름을 입력해줘! 😊'); return; }
+  currentName = name;
+  showWelcome(name);
+  saveToStorage();
+}
+
+function showWelcome(name) {
+  const msg = document.getElementById('welcomeMsg');
+  msg.textContent = `반가워, ${name}아! 🌟 우리 멋진 6학년을 만들어보자!`;
+  msg.style.display = 'block';
+}
+
+// ========================
+// TABS
+// ========================
+function switchTab(n) {
+  currentTab = n;
+  document.querySelectorAll('[id^="tab"]').forEach((el, i) => {
+    el.style.display = i === n ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === n);
+  });
+  // Update progress dots
+  document.querySelectorAll('.prog-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === n);
+  });
+}
+
+// ========================
+// ACTIVITY 1: TRUTH & LIE
+// ========================
+function selectLie(n) {
+  lieIndex = n;
+  document.querySelectorAll('.lie-picker-btn').forEach((b, i) => {
+    b.classList.toggle('selected', i + 1 === n);
+  });
+}
+
+function saveTruthLie() {
+  const t1 = document.getElementById('tl1').value.trim();
+  const t2 = document.getElementById('tl2').value.trim();
+  const t3 = document.getElementById('tl3').value.trim();
+  if (!t1 || !t2 || !t3) { showToast('문장을 모두 입력해줘!'); return; }
+  if (!lieIndex) { showToast('어느 게 거짓말인지 표시해줘!'); return; }
+
+  saveToStorage();
+  showToast('저장됐어! 🎉');
+  renderQuizPreview(t1, t2, t3, lieIndex);
+}
+
+function renderQuizPreview(t1, t2, t3, lie) {
+  const preview = document.getElementById('quizPreview');
+  const name = currentName || '나';
+  document.getElementById('quizQ').innerHTML =
+    `<b>${name}</b>의 문장 중 거짓말을 찾아봐! 👀<br><br>① ${t1}<br>② ${t2}<br>③ ${t3}`;
+
+  const btns = document.getElementById('quizBtns');
+  btns.innerHTML = '';
+  [1,2,3].forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'lie-picker-btn';
+    b.textContent = `${n}번이 거짓!`;
+    b.onclick = () => checkAnswer(n, lie);
+    btns.appendChild(b);
+  });
+
+  document.getElementById('quizResult').style.display = 'none';
+  preview.style.display = 'block';
+}
+
+function checkAnswer(pick, correct) {
+  const result = document.getElementById('quizResult');
+  result.style.display = 'block';
+  if (pick === correct) {
+    result.className = 'quiz-result quiz-correct';
+    result.textContent = '🎉 정답! 대박 눈치야~';
+  } else {
+    result.className = 'quiz-result quiz-wrong';
+    result.textContent = `❌ 아쉽! 정답은 ${correct}번이야!`;
+  }
+}
+
+// ========================
+// ACTIVITY 2: WORD CLOUD
+// ========================
+function setTopic(topic) {
+  currentTopic = topic;
+  document.getElementById('topic1').classList.toggle('active', topic === 'wish');
+  document.getElementById('topic2').classList.toggle('active', topic === 'like');
+  renderCloud();
+}
+
+function addKeyword() {
+  const input = document.getElementById('kwInput');
+  const kw = input.value.trim();
+  if (!kw) return;
+  if (myKeywords.length >= 15) { showToast('최대 15개까지 추가할 수 있어!'); return; }
+  myKeywords.push({ word: kw, topic: currentTopic });
+  input.value = '';
+  renderTags();
+  renderCloud();
+  saveToStorage();
+}
+
+function renderTags() {
+  const container = document.getElementById('myTags');
+  const filtered = myKeywords.filter(k => k.topic === currentTopic);
+  container.innerHTML = '';
+  filtered.forEach((kw, idx) => {
+    const tag = document.createElement('div');
+    tag.className = 'tag tag-colors';
+    tag.innerHTML = `${kw.word} <span class="del" onclick="removeKeyword(${idx})">✕</span>`;
+    container.appendChild(tag);
+  });
+}
+
+function removeKeyword(idx) {
+  const filtered = myKeywords.filter(k => k.topic === currentTopic);
+  const word = filtered[idx].word;
+  myKeywords = myKeywords.filter(k => !(k.word === word && k.topic === currentTopic));
+  renderTags();
+  renderCloud();
+  saveToStorage();
+}
+
+function renderCloud() {
+  const canvas = document.getElementById('cloudCanvas');
+  canvas.innerHTML = '';
+
+  const userWords = myKeywords.filter(k => k.topic === currentTopic).map(k => k.word);
+  const sampleWords = SAMPLE_CLOUD_WORDS[currentTopic] || [];
+  const allWords = [...new Set([...userWords, ...sampleWords])].slice(0, 20);
+
+  const colors = ['#e74c3c','#2ecc71','#3498db','#9b59b6','#f39c12','#1abc9c','#e91e63','#ff5722'];
+  const canvasW = canvas.offsetWidth || 300;
+  const canvasH = 200;
+
+  allWords.forEach((word, i) => {
+    const el = document.createElement('div');
+    el.className = 'cloud-word';
+    const isUser = userWords.includes(word);
+    const size = isUser ? (24 + Math.random() * 16) : (14 + Math.random() * 14);
+    el.style.cssText = `
+      font-size: ${size}px;
+      color: ${colors[i % colors.length]};
+      left: ${5 + Math.random() * 80}%;
+      top: ${5 + Math.random() * 75}%;
+      animation-delay: ${Math.random() * 3}s;
+      animation-duration: ${3 + Math.random() * 2}s;
+      opacity: ${isUser ? 1 : 0.6};
+    `;
+    el.textContent = word;
+    canvas.appendChild(el);
+  });
+}
+
+// ========================
+// ACTIVITY 3: AI PROFILE
+// ========================
+function renderKwPicker() {
+  const container = document.getElementById('kwPicker');
+  container.innerHTML = '';
+  PERSONALITY_KWS.forEach(kw => {
+    const chip = document.createElement('button');
+    chip.className = 'kw-chip';
+    chip.textContent = kw;
+    chip.onclick = () => toggleKw(chip, kw);
+    container.appendChild(chip);
+  });
+}
+
+function toggleKw(el, kw) {
+  if (selectedKws.has(kw)) {
+    selectedKws.delete(kw);
+    el.classList.remove('selected');
+  } else {
+    selectedKws.add(kw);
+    el.classList.add('selected');
+  }
+}
+
+function selectStyle(s) {
+  selectedStyle = s;
+  document.querySelectorAll('#styleSelector button').forEach(b => b.classList.remove('selected'));
+  if (s === 'character') document.getElementById('st1').classList.add('selected');
+  else if (s === 'cheer') document.getElementById('st2').classList.add('selected');
+  else document.getElementById('st3').classList.add('selected');
+}
+
+async function generateAI() {
+  const kws = [...selectedKws];
+  if (kws.length === 0) { showToast('키워드를 하나 이상 선택해줘!'); return; }
+
+  const extra = document.getElementById('extraInfo').value.trim();
+  const name = currentName || '나';
+
+  const styleMap = {
+    character: `'${name}'라는 캐릭터에 대한 멋진 캐릭터 설명문 (2~3문장, 초등학생이 좋아할 활기찬 말투)`,
+    cheer: `'${name}'를 위한 힘이 나는 응원 문구 (2~3줄, 반 친구들이 보내는 따뜻한 말투)`,
+    poem: `'${name}'를 주제로 한 짧고 귀여운 소시 (4줄 이내)`
+  };
+
+  const prompt = `초등학교 6학년 학생 '${name}'의 성격 키워드: ${kws.join(', ')}
+${extra ? `추가 정보: ${extra}` : ''}
+
+위 정보를 바탕으로 ${styleMap[selectedStyle]}을 한국어로 만들어줘.
+이모지도 적절히 넣어줘. 친근하고 따뜻하게!`;
+
+  document.getElementById('aiLoading').style.display = 'block';
+  document.getElementById('aiResult').style.display = 'none';
+  document.getElementById('regen').style.display = 'none';
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.map(b => b.text || '').join('') || '결과를 가져올 수 없었어. 다시 시도해줘!';
+
+    document.getElementById('aiLoading').style.display = 'none';
+    document.getElementById('aiResult').textContent = text;
+    document.getElementById('aiResult').style.display = 'block';
+    document.getElementById('regen').style.display = 'block';
+
+    saveToStorage();
+  } catch (e) {
+    document.getElementById('aiLoading').style.display = 'none';
+    document.getElementById('aiResult').textContent = '앗, 잠깐 연결이 안 됐어. 다시 시도해줘! 🙏';
+    document.getElementById('aiResult').style.display = 'block';
+    document.getElementById('regen').style.display = 'block';
+  }
+}
+
+// ========================
+// CARD VIEW
+// ========================
+function toggleCardView() {
+  const card = document.getElementById('cardView');
+  const main = document.getElementById('nameSection');
+  const visible = card.style.display === 'block';
+
+  if (!visible) {
+    // Build card
+    const name = currentName || '이름 없음';
+    document.getElementById('cardName').textContent = `🌟 ${name}`;
+
+    const items = [];
+    const t1 = document.getElementById('tl1').value;
+    const t2 = document.getElementById('tl2').value;
+    const t3 = document.getElementById('tl3').value;
+
+    if (t1||t2||t3) items.push({ q: '🃏 나를 맞혀봐!', a: [t1,t2,t3].filter(Boolean).join('\n') });
+
+    const kws = myKeywords.map(k=>k.word);
+    if (kws.length > 0) items.push({ q: '☁️ 내 키워드', a: kws.join('  ·  ') });
+
+    const ai = document.getElementById('aiResult').textContent;
+    if (ai) items.push({ q: '🤖 AI가 만든 나의 프로필', a: ai });
+
+    document.getElementById('cardItems').innerHTML = items.map(it =>
+      `<div class="card-item"><div class="card-q">${it.q}</div><div class="card-a">${it.a}</div></div>`
+    ).join('');
+
+    card.style.display = 'block';
+    document.querySelectorAll('.activity-card').forEach(c => c.style.display = 'none');
+    document.getElementById('nameSection').style.display = 'none';
+    document.querySelector('.tab-bar').style.display = 'none';
+    document.querySelector('.progress-bar').style.display = 'none';
+  } else {
+    card.style.display = 'none';
+    switchTab(currentTab);
+    document.getElementById('nameSection').style.display = 'block';
+    document.querySelector('.tab-bar').style.display = 'flex';
+    document.querySelector('.progress-bar').style.display = 'flex';
+  }
+}
+
+// ========================
+// TOAST
+// ========================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// Initialize style selection
+selectStyle('character');
+</script>
+</body>
+</html>
