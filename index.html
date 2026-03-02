@@ -53,4 +53,249 @@
   .btn-full { width: 100%; margin-top: 10px; font-size: 1rem; }
 
   input[type="text"], textarea {
-    width: 100%;
+    width: 100%; padding: 12px 16px; border-radius: 14px; border: 2px solid #e2e8f0;
+    margin-bottom: 10px; outline: none;
+  }
+
+  .tab-bar { display: flex; gap: 4px; background: rgba(255,255,255,0.6); border-radius: 18px; padding: 4px; margin-bottom: 16px; }
+  .tab-btn { flex: 1; padding: 9px 4px; border-radius: 14px; border: none; background: transparent; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: #9b99bb; }
+  .tab-btn.active { background: white; color: #5c3d99; box-shadow: 0 2px 8px rgba(100,100,180,0.15); }
+
+  /* Board Grid Style */
+  .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+  .student-item {
+    background: white; padding: 15px; border-radius: 18px; text-align: center;
+    border: 2px solid #f0f0f0; transition: 0.2s; cursor: pointer;
+  }
+  .student-item:hover { transform: translateY(-3px); border-color: var(--lavender); box-shadow: var(--shadow); }
+  .student-name { font-weight: 800; color: #5c3d99; margin-bottom: 5px; }
+  .student-ts { font-size: 0.7rem; color: #aaa; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: #2d3748; color: white; padding: 12px 24px; border-radius: 30px;
+    z-index: 100; transition: transform 0.3s;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .quiz-result { padding: 12px; border-radius: 14px; font-weight: 700; margin-top: 8px; text-align: center; display: none; }
+  .quiz-correct { background: #d1fae5; color: #065f46; }
+  .quiz-wrong { background: #fee2e2; color: #991b1b; }
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+<div class="bg-shapes">
+  <div class="shape"></div><div class="shape"></div>
+</div>
+
+<div class="container">
+  <div class="header">
+    <div style="font-size: 2rem;">🌸 ✨ 🦋</div>
+    <h1>우리 반 레포 활동지</h1>
+    <p style="font-size: 0.9rem; color: #7a7a9d;">6학년 새 학기 친해지기 특집 💜</p>
+  </div>
+
+  <div id="welcomeMsg"></div>
+
+  <div class="name-section" id="nameSection">
+    <div style="font-size: 0.8rem; font-weight: 800; color: #9b59b6; margin-bottom: 8px;">👋 먼저 이름을 알려줘!</div>
+    <div style="display: flex; gap: 10px;">
+      <input type="text" id="nameInput" placeholder="예) 김민지" maxlength="10" style="margin-bottom:0;">
+      <button class="btn btn-primary" onclick="setName()">시작!</button>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(0)">🃏 퀴즈 만들기</button>
+    <button class="tab-btn" onclick="switchTab(1)">☁️ 키워드</button>
+    <button class="tab-btn" onclick="switchTab(2)">🤖 AI 프로필</button>
+    <button class="tab-btn" onclick="switchTab(3)" style="background: #fff0f3; color: #e05c7a;">🔥 우리 반 보드</button>
+  </div>
+
+  <div class="activity-card" id="tab0">
+    <h3 style="margin-bottom: 15px;">🃏 나를 맞혀봐!</h3>
+    <input type="text" id="tl1" placeholder="진실 혹은 거짓 문장 1">
+    <input type="text" id="tl2" placeholder="진실 혹은 거짓 문장 2">
+    <input type="text" id="tl3" placeholder="진실 혹은 거짓 문장 3">
+    
+    <p style="font-size: 0.8rem; font-weight: 700; color: #e05c7a;">❓ 어느 것이 거짓말이야?</p>
+    <div style="display: flex; gap: 8px; margin: 10px 0;" id="liePicker">
+      <button class="btn btn-outline" onclick="selectLie(1)">1번</button>
+      <button class="btn btn-outline" onclick="selectLie(2)">2번</button>
+      <button class="btn btn-outline" onclick="selectLie(3)">3번</button>
+    </div>
+    
+    <button class="btn btn-coral btn-full" onclick="saveTruthLie()">💾 내 퀴즈 저장하기</button>
+
+    <div id="quizPreview" style="margin-top:20px; display:none; background: #f8f9ff; padding: 15px; border-radius: 15px;">
+      <div id="quizQ" style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 10px;"></div>
+      <div id="quizBtns" style="display: flex; gap: 5px;"></div>
+      <div class="quiz-result" id="quizResult"></div>
+    </div>
+  </div>
+
+  <div class="activity-card" id="tab1" style="display:none;">☁️ 키워드 클라우드 기능 (기존과 동일)</div>
+  <div class="activity-card" id="tab2" style="display:none;">🤖 AI 프로필 생성 기능 (기존과 동일)</div>
+
+  <div class="activity-card" id="tab3" style="display:none;">
+    <h3 style="margin-bottom: 5px;">🔥 우리 반 퀴즈 보드</h3>
+    <p style="font-size: 0.8rem; color: #7a7a9d; margin-bottom: 15px;">친구 이름을 눌러서 퀴즈를 맞춰보세요!</p>
+    <div class="board-grid" id="classBoard">
+      </div>
+  </div>
+
+  <button class="btn btn-full" style="background:linear-gradient(135deg,#f97316,#ef4444);color:white; margin-top: 10px;" onclick="shareToBoard()">📢 우리 반 보드에 올리기!</button>
+
+</div>
+
+<div class="toast" id="toast">저장됐어! 🎉</div>
+
+<script>
+// Firebase 설정 (사용자 키 유지)
+firebase.initializeApp({
+  apiKey: 'AIzaSyDhZbmZ64vroTb7dTWBHNmAgvADUT8ZHtQ',
+  projectId: 'whoami-fd9d4',
+  databaseURL: 'https://whoami-fd9d4-default-rtdb.asia-southeast1.firebasedatabase.app'
+});
+const db = firebase.database();
+const CLASS_CODE = '6학년1반';
+
+let currentName = '';
+let lieIndex = 0;
+let studentsData = {}; // 전체 학생 데이터를 담을 객체
+
+// 초기화
+window.onload = function() {
+  loadFromStorage();
+  listenToBoard(); // 보드 실시간 감시 시작
+};
+
+function setName() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) { showToast('이름을 입력해줘! 😊'); return; }
+  currentName = name;
+  document.getElementById('welcomeMsg').textContent = `반가워, ${name}아! 🌟`;
+  document.getElementById('welcomeMsg').style.display = 'block';
+  saveToStorage();
+}
+
+function selectLie(n) {
+  lieIndex = n;
+  const btns = document.querySelectorAll('#liePicker .btn');
+  btns.forEach((b, i) => b.style.background = (i+1 === n) ? '#ffb7b2' : 'white');
+}
+
+// 데이터 저장 (내 기기)
+function saveToStorage() {
+  const data = { name: currentName, tl1: document.getElementById('tl1').value, tl2: document.getElementById('tl2').value, tl3: document.getElementById('tl3').value, lie: lieIndex };
+  localStorage.setItem('rapportData', JSON.stringify(data));
+}
+
+function loadFromStorage() {
+  const saved = JSON.parse(localStorage.getItem('rapportData') || '{}');
+  if (saved.name) { currentName = saved.name; document.getElementById('nameInput').value = saved.name; }
+}
+
+// 보드에 데이터 올리기
+async function shareToBoard() {
+  if (!currentName) { showToast('먼저 이름을 입력해줘!'); return; }
+  const payload = {
+    name: currentName,
+    tl1: document.getElementById('tl1').value,
+    tl2: document.getElementById('tl2').value,
+    tl3: document.getElementById('tl3').value,
+    lie: lieIndex,
+    ts: Date.now()
+  };
+  if(!payload.tl1 || !payload.lie) { showToast('퀴즈 내용을 완성해줘!'); return; }
+
+  try {
+    await db.ref(`classes/${CLASS_CODE}/students/${currentName}`).set(payload);
+    showToast('🔥 보드에 성공적으로 올렸어!');
+    switchTab(3); // 보드 탭으로 이동
+  } catch(e) { showToast('오류 발생!'); }
+}
+
+// 실시간 보드 리스너
+function listenToBoard() {
+  db.ref(`classes/${CLASS_CODE}/students`).on('value', (snapshot) => {
+    studentsData = snapshot.val() || {};
+    renderBoard();
+  });
+}
+
+// 보드 화면 그리기
+function renderBoard() {
+  const container = document.getElementById('classBoard');
+  container.innerHTML = '';
+  
+  Object.keys(studentsData).forEach(name => {
+    const student = studentsData[name];
+    const item = document.createElement('div');
+    item.className = 'student-item';
+    item.innerHTML = `
+      <div class="student-name">🙋‍♂️ ${name}</div>
+      <div class="student-ts">퀴즈 준비 완료!</div>
+    `;
+    item.onclick = () => startFriendQuiz(name);
+    container.appendChild(item);
+  });
+}
+
+// 친구 퀴즈 풀기 시작
+function startFriendQuiz(name) {
+  const data = studentsData[name];
+  switchTab(0); // 퀴즈 탭으로 이동
+  renderQuizPreview(data.tl1, data.tl2, data.tl3, data.lie, name);
+  showToast(`${name}의 퀴즈를 풀어보자!`);
+}
+
+function renderQuizPreview(t1, t2, t3, lie, targetName) {
+  const preview = document.getElementById('quizPreview');
+  document.getElementById('quizQ').innerHTML = 
+    `<b>${targetName}</b>의 문장 중 거짓말을 찾아봐! 👀<br><br>① ${t1}<br>② ${t2}<br>③ ${t3}`;
+
+  const btns = document.getElementById('quizBtns');
+  btns.innerHTML = '';
+  [1,2,3].forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'btn';
+    b.style.border = '1px solid #ddd';
+    b.textContent = `${n}번!`;
+    b.onclick = () => checkAnswer(n, lie);
+    btns.appendChild(b);
+  });
+  document.getElementById('quizResult').style.display = 'none';
+  preview.style.display = 'block';
+}
+
+function checkAnswer(pick, correct) {
+  const result = document.getElementById('quizResult');
+  result.style.display = 'block';
+  if (pick === correct) {
+    result.className = 'quiz-result quiz-correct';
+    result.textContent = '🎉 정답! 정말 잘 아는구나?';
+  } else {
+    result.className = 'quiz-result quiz-wrong';
+    result.textContent = `❌ 아쉽다! 정답은 ${correct}번이야.`;
+  }
+}
+
+function switchTab(n) {
+  document.querySelectorAll('[id^="tab"]').forEach((el, i) => el.style.display = i === n ? 'block' : 'none');
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>
