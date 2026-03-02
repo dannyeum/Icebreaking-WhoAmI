@@ -21,32 +21,34 @@
 
   .container { max-width: 600px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
 
-  /* Header */
+  /* Header & Score display */
   .header {
-    text-align: center; padding: 25px; background: var(--card-bg);
-    border-radius: 24px; box-shadow: var(--shadow); margin-bottom: 20px;
-    border: 2px solid white;
+    text-align: center; padding: 20px; background: var(--card-bg);
+    border-radius: 24px; box-shadow: var(--shadow); margin-bottom: 20px; border: 2px solid white;
   }
-  .header h1 { font-family: 'Gaegu', cursive; font-size: 2.2rem; color: #5c3d99; margin-bottom: 5px; }
+  .header h1 { font-family: 'Gaegu', cursive; font-size: 2rem; color: #5c3d99; }
+  .user-score-badge {
+    display: inline-block; margin-top: 10px; padding: 5px 15px; background: #818cf8;
+    color: white; border-radius: 20px; font-weight: 800; font-size: 0.9rem;
+  }
 
   /* Tabs */
-  .tab-bar { display: flex; gap: 5px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+  .tab-bar { display: flex; gap: 5px; margin-bottom: 20px; }
   .tab-btn {
-    flex: 1; padding: 12px 8px; border-radius: 15px; border: none;
-    background: white; font-weight: 700; font-size: 0.85rem; cursor: pointer;
-    color: #888; transition: 0.2s; white-space: nowrap;
+    flex: 1; padding: 12px 5px; border-radius: 15px; border: none;
+    background: white; font-weight: 700; font-size: 0.8rem; cursor: pointer;
+    color: #888; transition: 0.2s;
   }
-  .tab-btn.active { background: #a78bfa; color: white; box-shadow: 0 4px 10px rgba(167,139,250,0.4); }
+  .tab-btn.active { background: #a78bfa; color: white; }
 
   /* Cards */
   .card {
     background: var(--card-bg); border-radius: 24px; padding: 25px;
     box-shadow: var(--shadow); border: 2px solid white; display: none;
-    animation: fadeIn 0.4s ease;
+    animation: fadeIn 0.3s ease;
   }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* Inputs & Buttons */
   input[type="text"], input[type="password"] {
     width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #eee;
     margin-bottom: 12px; outline: none; font-size: 1rem;
@@ -59,15 +61,16 @@
   /* Board Grid */
   .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
   .student-card {
-    background: white; padding: 18px; border-radius: 18px; text-align: center;
+    background: white; padding: 15px; border-radius: 18px; text-align: center;
     border: 2px solid #f0f0f0; cursor: pointer; transition: 0.2s;
   }
-  .student-card:hover { transform: scale(1.03); border-color: var(--lavender); }
+  .student-card:hover { transform: scale(1.03); }
+  .student-score { font-size: 0.75rem; color: #818cf8; font-weight: 800; margin-top: 5px; }
 
-  /* Quiz Player (친구 퀴즈 푸는 화면) */
+  /* Quiz Player Fullscreen */
   #quizPlayer {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(255,255,255,0.98); z-index: 1000; display: none;
+    background: rgba(240, 244, 255, 0.98); z-index: 1000; display: none;
     flex-direction: column; align-items: center; justify-content: center; padding: 20px;
   }
   .quiz-box {
@@ -79,19 +82,17 @@
     width: 100%; padding: 15px; margin: 8px 0; border-radius: 15px;
     border: 2px solid #eee; background: #f9f9f9; cursor: pointer; font-size: 1rem; font-weight: 700;
   }
-  .quiz-option:hover { background: #f0edff; border-color: var(--lavender); }
 
   /* Admin List */
   .admin-item {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9rem;
+    padding: 10px; border-bottom: 1px solid #eee; font-size: 0.85rem;
   }
-  .del-btn { color: #ff4d4d; cursor: pointer; font-weight: 800; border: 1px solid #ff4d4d; padding: 2px 8px; border-radius: 5px; }
 
   .toast {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    background: #333; color: white; padding: 10px 20px; border-radius: 20px;
-    display: none; z-index: 2000;
+    position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
+    background: #333; color: white; padding: 12px 25px; border-radius: 30px;
+    display: none; z-index: 3000; font-weight: 700;
   }
 </style>
 
@@ -103,7 +104,7 @@
 <div class="container">
   <div class="header">
     <h1>우리 반 레포 활동지 ✨</h1>
-    <p style="font-size: 0.9rem; color: #888;">친구들과 즐겁게 소통해요!</p>
+    <div class="user-score-badge">내 점수: <span id="myScoreDisp">0</span>점</div>
   </div>
 
   <div class="card" id="nameSection" style="display: block; margin-bottom: 20px;">
@@ -122,39 +123,33 @@
 
   <div class="card" id="tab0" style="display: block;">
     <h3 style="margin-bottom: 15px; color: #5c3d99;">🃏 나만의 퀴즈 출제하기</h3>
-    <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">진실 2개와 거짓 1개를 적어주세요!</p>
-    
-    <input type="text" id="q1" placeholder="첫 번째 문장">
-    <input type="text" id="q2" placeholder="두 번째 문장">
-    <input type="text" id="q3" placeholder="세 번째 문장">
-    
+    <input type="text" id="q1" placeholder="진실 혹은 거짓 문장 1">
+    <input type="text" id="q2" placeholder="진실 혹은 거짓 문장 2">
+    <input type="text" id="q3" placeholder="진실 혹은 거짓 문장 3">
     <p style="font-weight: 700; font-size: 0.85rem; color: #e05c7a; margin: 10px 0;">거짓말은 몇 번인가요?</p>
     <div style="display: flex; gap: 8px; margin-bottom: 15px;">
       <button class="btn btn-outline lie-sel" onclick="setLie(1)">1번</button>
       <button class="btn btn-outline lie-sel" onclick="setLie(2)">2번</button>
       <button class="btn btn-outline lie-sel" onclick="setLie(3)">3번</button>
     </div>
-    
     <button class="btn btn-main" onclick="uploadQuiz()" style="background: var(--coral);">🚀 보드에 내 퀴즈 올리기</button>
   </div>
 
   <div class="card" id="tab1">
-    <h3 style="margin-bottom: 5px;">🔥 우리 반 게시판</h3>
-    <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">친구 이름을 눌러서 퀴즈를 맞춰보세요!</p>
-    <div class="board-grid" id="boardList">
-      </div>
+    <h3 style="margin-bottom: 15px;">🔥 우리 반 게시판</h3>
+    <div class="board-grid" id="boardList"></div>
   </div>
 
   <div class="card" id="tab2">
-    <h3>⚙️ 데이터 관리 (교사용)</h3>
+    <h3>⚙️ 교사용 관리 모드</h3>
     <div id="adminAuth">
       <p style="margin: 15px 0 10px; font-size: 0.9rem;">비밀번호를 입력하세요.</p>
       <input type="password" id="adminPw" placeholder="비밀번호 4자리">
       <button class="btn btn-main" onclick="checkAdmin()">로그인</button>
     </div>
     <div id="adminPanel" style="display: none;">
-      <button class="btn btn-main" onclick="resetAllData()" style="background: #ff4d4d; margin-bottom: 20px;">💣 전체 데이터 초기화</button>
-      <p style="font-weight: 800; font-size: 0.9rem; margin-bottom: 10px;">학생 개별 관리</p>
+      <button class="btn btn-main" onclick="resetAllScores()" style="background: #818cf8; margin-bottom: 10px;">✨ 전체 점수 초기화</button>
+      <button class="btn btn-main" onclick="resetAllData()" style="background: #ff4d4d; margin-bottom: 20px;">💣 전체 데이터 삭제</button>
       <div id="adminList"></div>
     </div>
   </div>
@@ -162,22 +157,19 @@
 
 <div id="quizPlayer">
   <div class="quiz-box">
-    <h2 id="targetName" style="color: #5c3d99; margin-bottom: 20px;">ㅇㅇㅇ의 퀴즈</h2>
-    <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">이 중 <b>거짓말</b>은 무엇일까요?</p>
-    
+    <h2 id="targetName" style="color: #5c3d99; margin-bottom: 15px;"></h2>
+    <p style="font-size: 0.9rem; color: #888; margin-bottom: 20px;">거짓말 문장을 찾아보세요!</p>
     <button class="quiz-option" id="opt1" onclick="submitAnswer(1)"></button>
     <button class="quiz-option" id="opt2" onclick="submitAnswer(2)"></button>
     <button class="quiz-option" id="opt3" onclick="submitAnswer(3)"></button>
-    
-    <div id="solveResult" style="margin-top: 20px; font-weight: 800; font-size: 1.2rem; display: none;"></div>
-    <button class="btn btn-outline" onclick="closeQuiz()" style="margin-top: 25px; width: 100%;">닫기</button>
+    <button class="btn btn-outline" onclick="closeQuiz()" style="margin-top: 20px; width: 100%;">그만 풀기</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// Firebase 초기화 (제공해주신 키 사용)
+// Firebase 초기화
 firebase.initializeApp({
   apiKey: 'AIzaSyDhZbmZ64vroTb7dTWBHNmAgvADUT8ZHtQ',
   projectId: 'whoami-fd9d4',
@@ -189,16 +181,11 @@ const CLASS_REF = db.ref('classes/6학년1반/students');
 let myName = '';
 let selectedLie = 0;
 let students = {};
-let currentQuizAns = 0;
+let currentQuizData = null;
 
-// 초기 로드
 window.onload = () => {
   const saved = localStorage.getItem('school_name');
-  if(saved) {
-    myName = saved;
-    document.getElementById('userName').value = saved;
-    document.getElementById('nameSection').style.border = '2px solid #818cf8';
-  }
+  if(saved) { myName = saved; document.getElementById('userName').value = saved; }
   listenData();
 };
 
@@ -207,42 +194,32 @@ function saveName() {
   if(!val) return alert('이름을 입력해줘!');
   myName = val;
   localStorage.setItem('school_name', val);
-  showToast('이름이 저장되었습니다! 😊');
+  showToast(`${val}님, 확인되었습니다!`);
 }
 
 function setLie(n) {
   selectedLie = n;
-  document.querySelectorAll('.lie-sel').forEach((b, i) => {
-    b.classList.toggle('selected', i + 1 === n);
-  });
+  document.querySelectorAll('.lie-sel').forEach((b, i) => b.classList.toggle('selected', i + 1 === n));
 }
 
-// 퀴즈 업로드
 function uploadQuiz() {
-  if(!myName) return alert('먼저 이름을 입력하고 확인을 눌러줘!');
-  const q1 = document.getElementById('q1').value.trim();
-  const q2 = document.getElementById('q2').value.trim();
-  const q3 = document.getElementById('q3').value.trim();
-  
-  if(!q1 || !q2 || !q3 || selectedLie === 0) return alert('모든 문장을 적고 정답을 골라줘!');
+  if(!myName) return alert('이름을 먼저 입력하고 확인을 눌러줘!');
+  const qs = [document.getElementById('q1').value, document.getElementById('q2').value, document.getElementById('q3').value];
+  if(qs.some(q => !q.trim()) || selectedLie === 0) return alert('모든 내용을 채워줘!');
 
-  CLASS_REF.child(myName).set({
-    name: myName,
-    q1, q2, q3,
-    ans: selectedLie,
-    ts: Date.now()
-  }).then(() => {
-    showToast('보드에 퀴즈를 올렸어! 🔥');
-    switchTab(1);
-  });
+  CLASS_REF.child(myName).update({
+    name: myName, q1: qs[0], q2: qs[1], q3: qs[2], ans: selectedLie, ts: Date.now()
+  }).then(() => { showToast('퀴즈가 보드에 올라갔어! 🔥'); switchTab(1); });
 }
 
-// 데이터 감시 및 보드 업데이트
 function listenData() {
   CLASS_REF.on('value', (snapshot) => {
     students = snapshot.val() || {};
     updateBoard();
     updateAdminList();
+    if(myName && students[myName]) {
+      document.getElementById('myScoreDisp').textContent = students[myName].score || 0;
+    }
   });
 }
 
@@ -250,79 +227,86 @@ function updateBoard() {
   const list = document.getElementById('boardList');
   list.innerHTML = '';
   Object.keys(students).forEach(name => {
+    const s = students[name];
     const div = document.createElement('div');
     div.className = 'student-card';
-    div.innerHTML = `<div style="font-size:1.2rem; margin-bottom:5px;">🙋‍♂️</div><div style="font-weight:800;">${name}</div>`;
+    div.innerHTML = `<div style="font-weight:800;">🙋‍♂️ ${name}</div><div class="student-score">점수: ${s.score || 0}</div>`;
     div.onclick = () => openQuiz(name);
     list.appendChild(div);
   });
 }
 
-// 퀴즈 풀기 시작
 function openQuiz(name) {
+  if(name === myName) return alert('내 문제는 내가 풀 수 없어요! 다른 친구 문제를 골라봐요.');
   const data = students[name];
-  currentQuizAns = data.ans;
+  currentQuizData = data;
   
   document.getElementById('targetName').textContent = `${name}의 퀴즈`;
   document.getElementById('opt1').textContent = `1. ${data.q1}`;
   document.getElementById('opt2').textContent = `2. ${data.q2}`;
   document.getElementById('opt3').textContent = `3. ${data.q3}`;
-  
-  document.getElementById('solveResult').style.display = 'none';
   document.getElementById('quizPlayer').style.display = 'flex';
 }
 
 function submitAnswer(n) {
-  const res = document.getElementById('solveResult');
-  res.style.display = 'block';
-  if(n === currentQuizAns) {
-    res.innerHTML = "🎉 정답! 진짜를 찾아냈어!";
-    res.style.color = "#059669";
+  if(n === currentQuizData.ans) {
+    showToast("🎉 정답입니다! 점수 +1");
+    // 점수 업데이트
+    const newScore = (students[myName]?.score || 0) + 1;
+    CLASS_REF.child(myName).child('score').set(newScore);
+    closeQuiz();
   } else {
-    res.innerHTML = `❌ 틀렸어! 정답은 ${currentQuizAns}번이야.`;
-    res.style.color = "#dc2626";
+    alert("오답입니다! 다른 친구 문제로 넘어갑니다.");
+    jumpToRandomQuiz();
   }
 }
 
-function closeQuiz() {
-  document.getElementById('quizPlayer').style.display = 'none';
+function jumpToRandomQuiz() {
+  const others = Object.keys(students).filter(n => n !== myName && n !== currentQuizData.name);
+  if(others.length > 0) {
+    const randomName = others[Math.floor(Math.random() * others.length)];
+    openQuiz(randomName);
+  } else {
+    alert("더 이상 풀 수 있는 다른 친구의 문제가 없어요!");
+    closeQuiz();
+  }
 }
 
-// 교사 관리 기능
+function closeQuiz() { document.getElementById('quizPlayer').style.display = 'none'; }
+
+// 교사용 관리
 function checkAdmin() {
-  const pw = document.getElementById('adminPw').value;
-  if(pw === '6956') {
+  if(document.getElementById('adminPw').value === '6956') {
     document.getElementById('adminAuth').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
-  } else {
-    alert('비밀번호가 틀렸습니다.');
-  }
+  } else alert('비밀번호가 틀렸습니다.');
+}
+
+function resetAllScores() {
+  if(!confirm('모든 학생의 점수를 0점으로 초기화할까요?')) return;
+  Object.keys(students).forEach(name => {
+    CLASS_REF.child(name).child('score').set(0);
+  });
+  showToast('점수 초기화 완료! ✨');
+}
+
+function resetAllData() {
+  if(confirm('모든 데이터를 삭제할까요?')) CLASS_REF.remove();
 }
 
 function updateAdminList() {
   const list = document.getElementById('adminList');
-  list.innerHTML = '';
+  list.innerHTML = '<p style="font-weight:800; margin: 10px 0;">학생 목록</p>';
   Object.keys(students).forEach(name => {
     const row = document.createElement('div');
     row.className = 'admin-item';
-    row.innerHTML = `<span>${name} 학생</span> <span class="del-btn" onclick="deleteStudent('${name}')">삭제</span>`;
+    row.innerHTML = `<span>${name} (${students[name].score || 0}점)</span> <button onclick="deleteStudent('${name}')" style="color:red; background:none; border:none; cursor:pointer;">[삭제]</button>`;
     list.appendChild(row);
   });
 }
 
-function deleteStudent(name) {
-  if(confirm(`${name} 학생의 데이터를 삭제할까요?`)) {
-    CLASS_REF.child(name).remove();
-  }
-}
+function deleteStudent(name) { if(confirm(`${name} 삭제?`)) CLASS_REF.child(name).remove(); }
 
-function resetAllData() {
-  if(confirm('정말 우리 반 모든 데이터를 초기화할까요? 되돌릴 수 없습니다.')) {
-    CLASS_REF.remove().then(() => alert('초기화 완료!'));
-  }
-}
-
-// 기타 유틸
 function switchTab(n) {
   document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n));
   document.querySelectorAll('.card').forEach((c, i) => {
@@ -332,8 +316,7 @@ function switchTab(n) {
 
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
+  t.textContent = msg; t.style.display = 'block';
   setTimeout(() => t.style.display = 'none', 2000);
 }
 </script>
