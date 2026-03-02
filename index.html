@@ -452,6 +452,9 @@
     .activity-title { font-size: 0.95rem; }
   }
 </style>
+  <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -627,6 +630,37 @@
 <div class="toast" id="toast">저장됐어! 🎉</div>
 
 <script>
+// ========================
+// FIREBASE 설정 (★ 여기를 본인 값으로 교체!)
+// ========================
+firebase.initializeApp({
+  apiKey:      'AIzaSyDhZbmZ64vroTb7dTWBHNmAgvADUT8ZHtQ',
+  projectId:   'whoami-fd9d4',
+  databaseURL: 'https://whoami-fd9d4-default-rtdb.asia-southeast1.firebasedatabase.app',
+  authDomain:  '★projectId★.firebaseapp.com'
+});
+const db = firebase.database();
+const CLASS_CODE = '6학년1반';  // ← 원하는 반 이름으로 변경
+
+async function shareToBoard() {
+  if (!currentName) { showToast('먼저 이름을 입력해줘!'); return; }
+  const payload = {
+    name: currentName,
+    tl1: document.getElementById('tl1').value,
+    tl2: document.getElementById('tl2').value,
+    tl3: document.getElementById('tl3').value,
+    lie: lieIndex,
+    keywords: myKeywords,
+    aiResult: document.getElementById('aiResult').textContent,
+    ts: Date.now()
+  };
+  try {
+    await db.ref(`classes/${CLASS_CODE}/students/${currentName}`).set(payload);
+    showToast('🔥 우리 반 보드에 올라갔어!');
+  } catch(e) {
+    showToast('오류: ' + e.message);
+  }
+}
 // ========================
 // STATE
 // ========================
